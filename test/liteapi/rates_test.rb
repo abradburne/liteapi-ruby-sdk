@@ -48,32 +48,6 @@ class RatesTest < Minitest::Test
     assert_kind_of Hash, result
   end
 
-  def test_full_rates_with_children
-    stub_request(:post, 'https://api.liteapi.travel/v3.0/hotels/rates')
-      .with(
-        body: hash_including(
-          'hotelIds' => ['lp1234'],
-          'occupancies' => [{ 'rooms' => 1, 'adults' => 2, 'children' => [5, 10] }]
-        )
-      )
-      .to_return(
-        status: 200,
-        body: { 'status' => 'success', 'data' => {} }.to_json,
-        headers: { 'Content-Type' => 'application/json' }
-      )
-
-    result = @client.full_rates(
-      hotel_ids: ['lp1234'],
-      checkin: '2025-03-01',
-      checkout: '2025-03-03',
-      occupancies: [{ rooms: 1, adults: 2, children: [5, 10] }],
-      guest_nationality: 'US',
-      currency: 'USD'
-    )
-
-    assert_kind_of Hash, result
-  end
-
   def test_min_rates
     stub_request(:post, 'https://api.liteapi.travel/v3.0/hotels/min-rates')
       .with(

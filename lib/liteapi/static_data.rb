@@ -9,20 +9,21 @@ module Liteapi
 
     # Returns list of cities for a country
     #
-    # @param country_code [String] ISO-2 country code (e.g., 'SG', 'US')
-    def cities(country_code:)
-      get('data/cities', countryCode: country_code)
+    # @example
+    #   client.cities(country_code: 'IT')
+    def cities(**params)
+      get('data/cities', prepare_query_params(params))
     end
 
     # Search for places and areas
     #
-    # @param query [String] Search text (e.g., 'Rome', 'Manhattan')
-    # @param type [String, nil] Filter by place type (e.g., 'hotel')
-    # @param language [String] Language for results (default: 'en')
-    def places(query:, type: nil, language: 'en')
-      params = { textQuery: query, language: language }
-      params[:type] = type if type
-      get('data/places', params)
+    # @example
+    #   client.places(query: 'Rome')
+    #   client.places(query: 'Rome', type: 'hotel', language: 'it')
+    def places(query:, **params)
+      params[:text_query] = query
+      params[:language] ||= 'en'
+      get('data/places', prepare_query_params(params))
     end
 
     # Returns all available currency codes
@@ -52,41 +53,43 @@ module Liteapi
 
     # Search for hotels
     #
-    # @param country_code [String] ISO-2 country code (required)
-    # @param city_name [String, nil] Filter by city name
-    # @param latitude [Float, nil] Latitude for geo search
-    # @param longitude [Float, nil] Longitude for geo search
-    # @param radius [Integer, nil] Search radius in km (for geo search)
-    # @param language [String] Language for results (default: 'en')
-    def hotels(country_code:, city_name: nil, latitude: nil, longitude: nil, radius: nil, language: 'en')
-      params = { countryCode: country_code, language: language }
-      params[:cityName] = city_name if city_name
-      params[:latitude] = latitude if latitude
-      params[:longitude] = longitude if longitude
-      params[:radius] = radius if radius
-      get('data/hotels', params)
+    # Supports multiple search approaches: by city, coordinates, place ID, or hotel IDs.
+    # All parameters are passed through to the API with snake_case converted to camelCase.
+    #
+    # @example Search by country and city
+    #   client.hotels(country_code: 'IT', city_name: 'Rome')
+    #
+    # @example Search by hotel IDs
+    #   client.hotels(hotel_ids: ['lp1234', 'lp5678'])
+    #
+    # @example AI-powered search
+    #   client.hotels(ai_search: 'luxury beach resort with pool')
+    #
+    # @example Search by place ID
+    #   client.hotels(place_id: 'place_abc123')
+    def hotels(**params)
+      params[:language] ||= 'en'
+      get('data/hotels', prepare_query_params(params))
     end
 
     # Get detailed hotel information
     #
-    # @param hotel_id [String] Hotel identifier
-    # @param language [String, nil] Language for results
-    def hotel(hotel_id, language: nil)
-      params = { hotelId: hotel_id }
-      params[:language] = language if language
-      get('data/hotel', params)
+    # @example
+    #   client.hotel('lp1897')
+    #   client.hotel('lp1897', language: 'fr')
+    def hotel(hotel_id, **params)
+      params[:hotel_id] = hotel_id
+      get('data/hotel', prepare_query_params(params))
     end
 
     # Get hotel reviews with optional sentiment analysis
     #
-    # @param hotel_id [String] Hotel identifier
-    # @param limit [Integer, nil] Maximum reviews to return (max 1000)
-    # @param sentiment [Boolean] Include sentiment analysis
-    def hotel_reviews(hotel_id:, limit: nil, sentiment: false)
-      params = { hotelId: hotel_id }
-      params[:limit] = limit if limit
-      params[:getSentiment] = sentiment if sentiment
-      get('data/reviews', params)
+    # @example
+    #   client.hotel_reviews(hotel_id: 'lp1897')
+    #   client.hotel_reviews(hotel_id: 'lp1897', limit: 100, get_sentiment: true)
+    def hotel_reviews(hotel_id:, **params)
+      params[:hotel_id] = hotel_id
+      get('data/reviews', prepare_query_params(params))
     end
   end
 end

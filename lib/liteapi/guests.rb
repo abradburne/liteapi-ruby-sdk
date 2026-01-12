@@ -4,59 +4,40 @@ module Liteapi
   module Guests
     # Get loyalty program status
     #
-    # Returns current loyalty program settings including status and cashback rates.
-    #
-    # @return [Hash] Loyalty program details
+    # @example
+    #   client.loyalty
     def loyalty
       get('guests/loyalty')
     end
 
     # Enable loyalty program
     #
-    # Creates a new loyalty program with specified settings.
-    #
-    # @param status [String] Program status ('enabled' or 'disabled')
-    # @param cashback_rate [Float] Cashback rate (e.g., 0.03 = 3%)
-    # @return [Hash] Loyalty program details
-    def enable_loyalty(status:, cashback_rate:)
-      post('guests/loyalty', {
-        status: status,
-        cashbackRate: cashback_rate
-      })
+    # @example
+    #   client.enable_loyalty(status: 'enabled', cashback_rate: 0.03)
+    def enable_loyalty(**params)
+      post('guests/loyalty', prepare_body_params(params))
     end
 
     # Update loyalty program
     #
-    # Updates existing loyalty program settings.
-    #
-    # @param status [String] Program status ('enabled' or 'disabled')
-    # @param cashback_rate [Float] Cashback rate (e.g., 0.03 = 3%)
-    # @return [Hash] Updated loyalty program details
-    def update_loyalty(status:, cashback_rate:)
-      put('guests/loyalty', {
-        status: status,
-        cashbackRate: cashback_rate
-      })
+    # @example
+    #   client.update_loyalty(status: 'enabled', cashback_rate: 0.05)
+    def update_loyalty(**params)
+      put('guests/loyalty', prepare_body_params(params))
     end
 
     # Get guest details
     #
-    # Retrieves detailed information about a guest including personal data,
-    # loyalty points, and booking history.
-    #
-    # @param guest_id [String, Integer] Guest identifier
-    # @return [Hash] Guest details
+    # @example
+    #   client.guest(123)
     def guest(guest_id)
       get("guests/#{guest_id}")
     end
 
     # Get guest bookings
     #
-    # Retrieves all bookings for a specific guest with loyalty points
-    # and cashback information.
-    #
-    # @param guest_id [String, Integer] Guest identifier
-    # @return [Array] List of guest bookings
+    # @example
+    #   client.guest_bookings(123)
     def guest_bookings(guest_id)
       get("guests/#{guest_id}/bookings")
     end

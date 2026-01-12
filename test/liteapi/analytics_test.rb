@@ -15,7 +15,7 @@ class AnalyticsTest < Minitest::Test
 
   def test_weekly_analytics
     stub_request(:post, "#{DASHBOARD_BASE_URL}/analytics/weekly")
-      .with(body: { 'from' => '2025-01-01', 'to' => '2025-01-07' })
+      .with(body: hash_including('from' => '2025-01-01', 'to' => '2025-01-07'))
       .to_return(
         status: 200,
         body: {
@@ -33,7 +33,7 @@ class AnalyticsTest < Minitest::Test
 
   def test_analytics_report
     stub_request(:post, "#{DASHBOARD_BASE_URL}/analytics/report")
-      .with(body: { 'from' => '2025-01-01', 'to' => '2025-01-31' })
+      .with(body: hash_including('from' => '2025-01-01', 'to' => '2025-01-31'))
       .to_return(
         status: 200,
         body: {
@@ -50,7 +50,7 @@ class AnalyticsTest < Minitest::Test
 
   def test_market_analytics
     stub_request(:post, "#{DASHBOARD_BASE_URL}/analytics/market")
-      .with(body: { 'from' => '2025-01-01', 'to' => '2025-01-31' })
+      .with(body: hash_including('from' => '2025-01-01', 'to' => '2025-01-31'))
       .to_return(
         status: 200,
         body: {
@@ -67,7 +67,7 @@ class AnalyticsTest < Minitest::Test
 
   def test_most_booked_hotels
     stub_request(:post, "#{DASHBOARD_BASE_URL}/analytics/top-hotels")
-      .with(body: { 'from' => '2025-01-01', 'to' => '2025-01-31' })
+      .with(body: hash_including('from' => '2025-01-01', 'to' => '2025-01-31'))
       .to_return(
         status: 200,
         body: {

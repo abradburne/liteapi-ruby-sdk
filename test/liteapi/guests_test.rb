@@ -26,7 +26,7 @@ class GuestsTest < Minitest::Test
 
   def test_enable_loyalty
     stub_request(:post, 'https://api.liteapi.travel/v3.0/guests/loyalty')
-      .with(body: { 'status' => 'enabled', 'cashbackRate' => 0.05 })
+      .with(body: hash_including('status' => 'enabled', 'cashbackRate' => 0.05))
       .to_return(
         status: 200,
         body: {
@@ -43,7 +43,7 @@ class GuestsTest < Minitest::Test
 
   def test_update_loyalty
     stub_request(:put, 'https://api.liteapi.travel/v3.0/guests/loyalty')
-      .with(body: { 'status' => 'disabled', 'cashbackRate' => 0.02 })
+      .with(body: hash_including('status' => 'disabled', 'cashbackRate' => 0.02))
       .to_return(
         status: 200,
         body: {

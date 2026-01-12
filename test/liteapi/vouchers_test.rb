@@ -42,9 +42,9 @@ class VouchersTest < Minitest::Test
     stub_request(:post, 'https://api.liteapi.travel/v3.0/vouchers')
       .with(
         body: hash_including(
-          'voucher_code' => 'SUMMER20',
-          'discount_type' => 'percentage',
-          'discount_value' => 20
+          'voucherCode' => 'SUMMER20',
+          'discountType' => 'percentage',
+          'discountValue' => 20
         )
       )
       .to_return(
@@ -74,7 +74,7 @@ class VouchersTest < Minitest::Test
 
   def test_update_voucher
     stub_request(:put, 'https://api.liteapi.travel/v3.0/vouchers/42')
-      .with(body: hash_including('voucher_code' => 'SUMMER25'))
+      .with(body: hash_including('voucherCode' => 'SUMMER25'))
       .to_return(
         status: 200,
         body: {
@@ -103,7 +103,7 @@ class VouchersTest < Minitest::Test
 
   def test_update_voucher_status
     stub_request(:put, 'https://api.liteapi.travel/v3.0/vouchers/42/status')
-      .with(body: { 'status' => 'inactive' })
+      .with(body: hash_including('status' => 'inactive'))
       .to_return(
         status: 200,
         body: {

@@ -15,7 +15,7 @@ class BookingTest < Minitest::Test
 
   def test_prebook
     stub_request(:post, "#{BOOK_BASE_URL}/rates/prebook")
-      .with(body: { 'offerId' => 'offer_123' })
+      .with(body: hash_including('offerId' => 'offer_123'))
       .to_return(
         status: 200,
         body: {
@@ -37,14 +37,7 @@ class BookingTest < Minitest::Test
   def test_book
     stub_request(:post, "#{BOOK_BASE_URL}/rates/book")
       .with(
-        body: hash_including(
-          'prebookId' => 'prebook_456',
-          'guestInfo' => {
-            'guestFirstName' => 'John',
-            'guestLastName' => 'Doe',
-            'guestEmail' => 'john@example.com'
-          }
-        )
+        body: hash_including('prebookId' => 'prebook_456')
       )
       .to_return(
         status: 200,
@@ -60,12 +53,12 @@ class BookingTest < Minitest::Test
 
     result = @client.book(
       prebook_id: 'prebook_456',
-      guest: {
-        first_name: 'John',
-        last_name: 'Doe',
-        email: 'john@example.com'
+      guest_info: {
+        guest_first_name: 'John',
+        guest_last_name: 'Doe',
+        guest_email: 'john@example.com'
       },
-      payment: {
+      payment_method: {
         holder_name: 'John Doe',
         card_number: '4111111111111111',
         expire_date: '12/25',

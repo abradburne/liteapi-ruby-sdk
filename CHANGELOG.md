@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0] - 2025-01-12
+
+### Changed
+
+- **Dynamic parameters**: All methods now accept arbitrary keyword arguments that are automatically converted from Ruby `snake_case` to API `camelCase`. This allows using new API parameters without SDK updates.
+- Nested hashes and arrays are recursively transformed for POST/PUT request bodies.
+- Array parameters in GET requests are joined with commas for query strings.
+
+### Fixed
+
+- Properly handle nested structures like `occupancies` in rates requests.
+
 ## [0.1.0] - 2025-01-12
 
 ### Added

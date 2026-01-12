@@ -90,6 +90,12 @@ client = Liteapi::Client.new(api_key: 'your_api_key')
 | `open_timeout` | `10` | Connection timeout in seconds |
 | `max_retries` | `3` | Retries on 429/5xx errors |
 
+### API Documentation
+
+For the full list of available parameters for each endpoint, see the official API documentation at **[docs.liteapi.travel](https://docs.liteapi.travel)**.
+
+This SDK uses Ruby-style `snake_case` parameter names which are automatically converted to the API's `camelCase` format. For example, `country_code` becomes `countryCode`.
+
 ---
 
 # Static Data

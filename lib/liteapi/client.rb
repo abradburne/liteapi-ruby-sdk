@@ -96,5 +96,36 @@ module Liteapi
     def dashboard_post(path, body = {})
       dashboard_connection.post(path, body)
     end
+
+    # Convert Ruby snake_case key to API camelCase
+    def camelize_key(key)
+      key.to_s.gsub(/_([a-z])/) { ::Regexp.last_match(1).upcase }
+    end
+
+    # Recursively convert keys from snake_case to camelCase
+    def deep_camelize_keys(obj)
+      case obj
+      when Hash
+        obj.each_with_object({}) do |(key, value), result|
+          result[camelize_key(key)] = deep_camelize_keys(value)
+        end
+      when Array
+        obj.map { |item| deep_camelize_keys(item) }
+      else
+        obj
+      end
+    end
+
+    # Prepare query params for GET requests (joins arrays with commas)
+    def prepare_query_params(params)
+      deep_camelize_keys(params.compact).transform_values do |v|
+        v.is_a?(Array) ? v.join(',') : v
+      end
+    end
+
+    # Prepare body params for POST/PUT requests (keeps arrays as arrays)
+    def prepare_body_params(params)
+      deep_camelize_keys(params.compact)
+    end
   end
 end

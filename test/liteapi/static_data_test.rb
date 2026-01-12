@@ -168,6 +168,62 @@ class StaticDataTest < Minitest::Test
     assert_kind_of Array, result
   end
 
+  def test_hotels_with_hotel_ids
+    stub_liteapi_request(:get, 'data/hotels',
+      query: { 'hotelIds' => 'lp1234,lp5678', 'language' => 'en' },
+      response_body: {
+        'status' => 'success',
+        'data' => [
+          { 'id' => 'lp1234' },
+          { 'id' => 'lp5678' }
+        ]
+      })
+
+    result = @client.hotels(hotel_ids: %w[lp1234 lp5678])
+
+    assert_kind_of Array, result
+    assert_equal 2, result.size
+  end
+
+  def test_hotels_with_ai_search
+    stub_liteapi_request(:get, 'data/hotels',
+      query: { 'aiSearch' => 'luxury beach resort', 'language' => 'en' },
+      response_body: {
+        'status' => 'success',
+        'data' => []
+      })
+
+    result = @client.hotels(ai_search: 'luxury beach resort')
+
+    assert_kind_of Array, result
+  end
+
+  def test_hotels_with_place_id
+    stub_liteapi_request(:get, 'data/hotels',
+      query: { 'placeId' => 'place_abc123', 'language' => 'en' },
+      response_body: {
+        'status' => 'success',
+        'data' => []
+      })
+
+    result = @client.hotels(place_id: 'place_abc123')
+
+    assert_kind_of Array, result
+  end
+
+  def test_hotels_with_chain_ids
+    stub_liteapi_request(:get, 'data/hotels',
+      query: { 'chainIds' => '1,2,3', 'language' => 'en' },
+      response_body: {
+        'status' => 'success',
+        'data' => []
+      })
+
+    result = @client.hotels(chain_ids: %w[1 2 3])
+
+    assert_kind_of Array, result
+  end
+
   def test_hotel
     stub_liteapi_request(:get, 'data/hotel',
       query: { 'hotelId' => 'lp1897' },
@@ -218,7 +274,7 @@ class StaticDataTest < Minitest::Test
         'data' => []
       })
 
-    result = @client.hotel_reviews(hotel_id: 'lp1897', limit: 5, sentiment: true)
+    result = @client.hotel_reviews(hotel_id: 'lp1897', limit: 5, get_sentiment: true)
 
     assert_kind_of Array, result
   end
